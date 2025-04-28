@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User's Tracked Products | Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+  <style>
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .card-img-top {
+      height: 200px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+<header class="bg-dark text-white p-3">
+  <div class="container d-flex justify-content-between">
+    <h4>👤 Viewing: {{ user['username'] }}'s Tracked Products</h4>
+    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-light">Back to Users</a>
+  </div>
+</header>
+
+<section class="p-5">
+  <div class="container">
+    <h3 class="mb-4">Total Products Tracked: {{ products|length }}</h3>
+
+    {% if products %}
+    <div class="row">
+      {% for product in products %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card">
+          <img src="{{ product.image_url or url_for('static', filename='assets/img/noimage.png') }}" class="card-img-top" alt="{{ product.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.title }}</h5>
+            <p class="card-text">Price: ₹{{ product.price }}</p>
+            <a href="{{ product.url }}" class="btn btn-outline-primary w-100 mb-2" target="_blank">View Product</a>
+            <a href="{{ url_for('tracker.delete_product', product_id=product.id) }}" class="btn btn-danger btn-sm w-100">🗑 Delete</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">This user has not tracked any products yet.</p>
+    {% endif %}
+  </div>
+</section>
+
+</body>
+</html>

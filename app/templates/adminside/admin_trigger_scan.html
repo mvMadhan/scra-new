@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🔄 Trigger Price Scan</h2>
+
+  <form method="POST" class="shadow p-4 bg-light rounded animate__animated animate__fadeIn">
+    <div class="form-group mb-3">
+      <label for="userSelect"><strong>Select User:</strong></label>
+      <select class="form-control" name="user_id" id="userSelect">
+        <option value="all">🌐 All Users</option>
+        {% for user in users %}
+          <option value="{{ user.id }}">{{ user.username }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label><strong>Set Custom Scan Interval:</strong></label>
+      <div class="input-group">
+        <input type="number" name="interval_value" class="form-control" placeholder="e.g., 6" required min="0">
+        <select class="form-select" name="interval_unit">
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours" selected>Hours</option>
+          <option value="days">Days</option>
+        </select>
+      </div>
+      <small class="form-text text-muted">Set to 0 for manual scan (run once immediately).</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-3">🚀 Trigger / Schedule Scan</button>
+  </form>
+</div>
+
+<!-- Animate.css CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}

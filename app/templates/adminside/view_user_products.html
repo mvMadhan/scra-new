@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">📦 Products Tracked by {{ user.username }}</h2>
+  <div class="text-end mb-3">
+    <a href="{{ url_for('admin_users.manage_users') }}" class="btn btn-secondary">⬅ Back to Users</a>
+  </div>
+
+  {% if products %}
+  <table class="table table-hover shadow-sm bg-white rounded">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Source</th>
+        <th>URL</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ product.title }}</td>
+        <td>₹{{ product.price }}</td>
+        <td>{{ product.source }}</td>
+        <td><a href="{{ product.url }}" target="_blank">View</a></td>
+        <td>
+          <img src="{{ product.image_url }}" alt="Image" style="height: 60px; border-radius: 8px;">
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-info text-center">No products tracked by this user yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

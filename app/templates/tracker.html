@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tracked Products & Alerts | Smart Price Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/img/favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+  <style>
+    .dashboard-card {
+      transition: 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .form-range {
+      width: 100%;
+    }
+    .range-label {
+      font-weight: 500;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<header class="bg-dark text-white p-3">
+  <div class="container d-flex justify-content-between">
+    <h4>Welcome, {{ username }}</h4>
+    <a href="{{ url_for('dashboard.home') }}" class="btn btn-outline-light">Back to Dashboard</a>
+  </div>
+</header>
+
+<section class="section-padding30">
+  <div class="container">
+    <h2 class="text-center mb-4">📦 Tracked Products & Price Alerts</h2>
+    <div class="row">
+      {% for product in tracked_products %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card dashboard-card p-3">
+          <img src="{{ product.image_url or url_for('static', filename='assets/img/noimage.png') }}" class="card-img-top" alt="{{ product.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.title }}</h5>
+            <p>Current Price: ₹ {{ product.price }}</p>
+            <form method="POST" action="{{ url_for('tracker.set_alerts', product_id=product.id) }}">
+              <div class="mb-3">
+                <label class="form-label range-label">Set Price Drop Alert (%):
+                  <span id="percent-value-{{ product.id }}">10%</span>
+                </label>
+                <input type="range" class="form-range" min="0" max="100" step="1" name="percentage" id="range-{{ product.id }}" value="10"
+                       oninput="document.getElementById('percent-value-{{ product.id }}').innerText = this.value + '%'">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Or Alert Me When Price Falls Below (₹)</label>
+                <input type="number" name="target_price" class="form-control" min="0" placeholder="e.g., 999">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Save Alert</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<footer class="footer-area mt-5">
+  <div class="container text-center">
+    <p>&copy; {{ current_year }} Smart Price Tracker | Alerts made smart 💡</p>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

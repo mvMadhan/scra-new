@@ -1,0 +1,218 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Smart Price Tracker | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/img/favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+  <style>
+    input:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(78, 84, 200, 0.5);
+    }
+    .dashboard-card {
+      transition: all 0.4s ease-in-out;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader-active">
+  <div class="preloader d-flex align-items-center justify-content-center">
+    <div class="preloader-inner">
+      <div class="preloader-circle"></div>
+      <div class="preloader-img">
+        <img src="{{ url_for('static', filename='assets/img/logo/logo.png') }}" alt="Loading">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-area">
+    <div class="main-header header-sticky">
+      <div class="container-fluid">
+        <div class="menu-wrapper">
+          <div class="logo">
+            <a href="{{ url_for('dashboard.home') }}">
+              <img src="{{ url_for('static', filename='assets/img/logo/logo.png') }}" alt="Logo">
+            </a>
+          </div>
+          <div class="main-menu d-none d-lg-block">
+            <nav>
+              <ul id="navigation">
+                <li><a href="{{ url_for('dashboard.home') }}">Dashboard</a></li>
+                <li><a href="#track">Track Product</a></li>
+                <li><a href="#tracked">Tracked Items</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+                <li><a href="{{ url_for('coupons.view_coupons') }}">Coupons</a></li>
+                <li><a href="{{ url_for('tracker.view_tracker') }}">Tracker</a></li>
+                <li><a href="#notifications">Notifications</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="header-right">
+            <ul>
+              <li><span class="flaticon-user"></span> {{ session['username'] }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mobile_menu d-block d-lg-none"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero-section section-padding30 text-center" style="background: linear-gradient(135deg, #4e54c8, #8f94fb); color: white;">
+  <div class="container">
+    <h1 class="display-4">Welcome, {{ session['username'] }} 👋</h1>
+    <p style="font-size: 20px;">Let’s find you the best deals today 👀</p>
+    <p class="lead">Track your favorite products, monitor price drops, and get smart coupon alerts in one place.</p>
+    <img src="{{ url_for('static', filename='assets/img/hero/dol.png') }}" class="img-fluid my-4" alt="Price Tracking">
+  </div>
+</section>
+
+<!-- Track Form -->
+<section id="track" class="section-padding30 bg-light">
+  <div class="container">
+    <div class="section-title text-center">
+      <h2>Track a New Product</h2>
+      <p>Paste an Amazon or Flipkart product URL below</p>
+    </div>
+    <form method="POST" action="{{ url_for('tracker.add_product') }}" class="row justify-content-center shadow-lg p-4 bg-white rounded-4">
+      <div class="col-md-8">
+        <input type="url" name="product_url" class="form-control mb-3" placeholder="Enter product URL..." required>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Track Now</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Tracked Products -->
+<section id="tracked" class="section-padding30">
+  <div class="container">
+    <div class="section-title text-center">
+      <h2>Your Tracked Products</h2>
+    </div>
+    <div class="row">
+      {% for product in tracked_products %}
+      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+        <div class="card mb-4 shadow-sm dashboard-card rounded-4">
+          <img src="{{ product.image_url or url_for('static', filename='assets/img/noimage.png') }}" class="card-img-top" alt="{{ product.title }}">
+          <div class="card-body">
+            <div class="text-end mb-2">
+              <img src="{{ url_for('static', filename='assets/img/logos/' + product.source + '.png') }}" alt="{{ product.source }}" height="30" onerror="this.style.display='none';">
+            </div>
+            <h5 class="card-title">{{ product.title }}</h5>
+            <p class="card-text">Current Price: ₹ {{ product.price }}</p>
+            <a href="{{ product.url }}" class="btn btn-outline-primary mb-2 w-100" target="_blank">View Product</a>
+            <a href="{{ url_for('tracker.delete_product', product_id=product.id) }}" class="btn btn-danger btn-sm w-100">🗑 Delete</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Analytics Section -->
+<section id="analytics" class="section-padding30 bg-light">
+  <div class="container">
+    <div class="section-title text-center">
+      <h2>Price Analytics</h2>
+      <p>Visualize price trends for your tracked products</p>
+    </div>
+    <div class="row">
+      {% for product in tracked_products %}
+      <div class="col-lg-6 col-md-12 mb-4">
+        <div class="card shadow p-3 dashboard-card rounded-4">
+          <h5 class="card-title">{{ product.title }}</h5>
+          <canvas id="chart-{{ product.id }}" height="200"></canvas>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-area">
+  <div class="container text-center">
+    <p>&copy; {{ current_year }} Smart Price Tracker | Built with ❤️ for students and shoppers</p>
+  </div>
+</footer>
+
+<!-- JS -->
+<script src="{{ url_for('static', filename='assets/js/vendor/jquery-1.12.4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Animate cards -->
+<script>
+  $(document).ready(function () {
+    $('.dashboard-card').hide().each(function (i) {
+      $(this).delay(i * 150).fadeIn(500);
+    });
+  });
+</script>
+
+<!-- Chart.js for Analytics -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    {% for product in tracked_products %}
+    const ctx{{ product.id }} = document.getElementById('chart-{{ product.id }}').getContext('2d');
+    new Chart(ctx{{ product.id }}, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for point in product.history %}
+          '{{ point.checked_on.strftime("%b %d") }}'{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ],
+        datasets: [{
+          label: 'Price (₹)',
+          data: [
+            {% for point in product.history %}
+            {{ point.price }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          borderColor: '#4e54c8',
+          backgroundColor: 'rgba(78,84,200,0.1)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: false }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+    {% endfor %}
+  });
+</script>
+
+</body>
+</html>

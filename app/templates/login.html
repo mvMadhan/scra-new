@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Smart Price Tracker | Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <h2 class="heading-section">Welcome Back</h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-12">
+            <div class="wrap d-md-flex">
+              <div class="text-wrap p-4 p-lg-5 d-flex img" style="background-image: url('{{ url_for('static', filename='images/bg.jpg') }}');">
+                <div class="text w-100">
+                  <h2 class="mb-4">Smart Price Tracker</h2>
+                  <p>Track products. Get coupon deals. Save money. Log in and start now.</p>
+                </div>
+              </div>
+              <div class="login-wrap p-4 p-md-5">
+                <div class="row justify-content-center py-md-5">
+                  <div class="col-lg-9">
+                    <form method="POST" action="{{ url_for('auth.login') }}" class="signup-form">
+                      <div class="form-group">
+                        <label class="label" for="email">Email Address</label>
+                        <input type="email" class="form-control" name="email" required>
+                      </div>
+                      <div class="form-group">
+                        <label class="label" for="password">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary submit p-3">Login</button>
+                      </div>
+                    </form>
+
+                    <div class="w-100 text-center mt-4">
+                      <p>Don’t have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
